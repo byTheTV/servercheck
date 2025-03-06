@@ -1,25 +1,18 @@
-package main
 
-// CheckServer проверяет доступность сервера по указанным протоколам
+package servercheck
+
+import (
+	"github.com/byTheTV/servercheck/servercheck/checkers"
+)
+
 func CheckServer(host, port string, protocols []string) map[string]bool {
 	results := make(map[string]bool)
 	for _, p := range protocols {
-		results[p] = isAlive(p, host, port)
+		if checker, ok := checkers.Checkers[p]; ok {
+			results[p] = checker.Check(host, port)
+		} else {
+			results[p] = false
+		}
 	}
 	return results
-}
-
-func isAlive(protocol, host, port string) bool {
-	switch protocol {
-	case "http", "https":
-		return CheckHTTP(protocol + "://" + host + ":" + port)
-	case "tcp":
-		return CheckTCP(host, port)
-	case "udp":
-		return CheckUDP(host, port)
-	case "icmp":
-		return CheckICMP(host)
-	default:
-		return false
-	}
 }

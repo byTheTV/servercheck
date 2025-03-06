@@ -1,11 +1,13 @@
-package main
+package checkers
 
 import (
 	"net"
 	"time"
 )
 
-func CheckTCP(host, port string) bool {
+type tcpChecker struct{}
+
+func (c tcpChecker) Check(host, port string) bool {
 	address := net.JoinHostPort(host, port)
 	conn, err := net.DialTimeout("tcp", address, 5*time.Second)
 	if err != nil {
@@ -13,4 +15,8 @@ func CheckTCP(host, port string) bool {
 	}
 	defer conn.Close()
 	return true
+}
+
+func init() {
+	RegisterChecker("tcp", tcpChecker{})
 }
