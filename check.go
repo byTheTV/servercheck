@@ -1,11 +1,18 @@
-
 package servercheck
 
 import (
 	"github.com/byTheTV/servercheck/checkers"
 )
 
-func CheckServer(host, port string, protocols []string) map[string]bool {
+func CheckServer(urlStr string, protocols []string) (map[string]bool, error) {
+	host, port, err := ParseURL(urlStr)
+	if err != nil {
+		return nil, err
+	}
+	return CheckServerWithHostPort(host, port, protocols), nil
+}
+
+func CheckServerWithHostPort(host, port string, protocols []string) map[string]bool {
 	results := make(map[string]bool)
 	for _, p := range protocols {
 		if checker, ok := checkers.Checkers[p]; ok {
