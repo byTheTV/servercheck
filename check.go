@@ -2,7 +2,7 @@
 package servercheck
 
 import (
-	"github.com/byTheTV/servercheck/servercheck/checkers"
+	"github.com/byTheTV/servercheck/checkers"
 )
 
 func CheckServer(host, port string, protocols []string) map[string]bool {
